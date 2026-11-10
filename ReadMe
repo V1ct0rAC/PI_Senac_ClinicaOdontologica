@@ -1,4 +1,13 @@
-📋 API REST - Sistema de Gerenciamento de Clínica Odontológica
+📋
+Projeto Integrador SENAC
+Alunos envolvidos no Projeto:
+Victor Araujo Correa
+Vinicius Ferrerira Lima
+Matheus Caires Martins
+Vinicius Eduardo Cardoso dos Santos
+Matheus Guimarães Lutuosa
+
+API REST - Sistema de Gerenciamento de Clínica Odontológica
 
   API Backend desenvolvida em Java com Spring Boot para o gerenciamento de uma clínica odontológica, cobrindo o cadastro de pacientes, dentistas e o agendamento de consultas com controle de integridade relacional.
   🚀 Tecnologias Utilizadas
@@ -47,3 +56,18 @@
       Refatoração do Domínio: DesACOPLAMENTO de classes abstratas de dados genéricos na entidade de consultas, centralizando a integridade referencial nas chaves estrangeiras relacionais (paciente_id e medico_dentista_id).
 
       Sincronização com o MySQL: Configuração do Hibernate com ddl-auto: update para gerenciar a evolução do esquema do banco de dados de maneira automatizada e segura.dar se o dentista já possui consulta marcada no mesmo horário).
+
+      🎨 Interface Web (Frontend Integrado)
+
+      O projeto conta com uma interface de gerenciamento moderna, leve e responsiva, desenvolvida em HTML5, JavaScript (ES6+) e estilizada com Tailwind CSS.
+
+      Por uma questão de praticidade e eficiência arquitetural, o frontend está embutido diretamente na pasta de recursos estáticos do Spring Boot, sendo servido na mesma origem (http://localhost:8080), o que elimina a necessidade de servidores web externos ou configurações complexas de CORS.
+      ✨ Funcionalidades da Interface:
+
+          Painel de Agendamento: Formulário dinâmico para marcar novas consultas, alimentado em tempo real por selects que buscam os pacientes e dentistas cadastrados no banco de dados.
+
+          Cadastro Rápido de Pacientes: Formulário para inclusão de novos pacientes com validação imediata via API.
+
+          Cadastro Rápido de Dentistas: Formulário para registro de profissionais da clínica com indicação de CRO e e-mail.
+
+          Design Responsivo: Layout limpo e intuitivo baseado em componentes modernos.

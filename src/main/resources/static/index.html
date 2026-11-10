@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clínica Odontológica - Gestão</title>
+    <!-- Tailwind CSS para um design limpo e profissional -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans min-h-screen">
+
+<!-- Header -->
+<header class="bg-blue-600 text-white shadow-md py-4 px-6 mb-8">
+    <div class="container mx-auto flex justify-between items-center">
+        <h1 class="text-2xl font-bold flex items-center gap-2">
+            🦷 Clínica Odontológica
+        </h1>
+        <span class="text-sm bg-blue-700 px-3 py-1 rounded-full">Painel Administrativo</span>
+    </div>
+</header>
+
+<main class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8 pb-12">
+
+    <!-- SEÇÃO DE AGENDAMENTO DE CONSULTAS -->
+    <section class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+        <h2 class="text-xl font-semibold mb-4 text-blue-600 flex items-center gap-2">
+            📅 Agendar Nova Consulta
+        </h2>
+        <form id="formConsulta" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Paciente:</label>
+                <select id="selectPaciente" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border focus:border-blue-500 focus:ring focus:ring-blue-200">
+                    <option value="">Carregando pacientes...</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Médico Dentista:</label>
+                <select id="selectDentista" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border focus:border-blue-500 focus:ring focus:ring-blue-200">
+                    <option value="">Carregando dentistas...</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Data e Hora da Consulta:</label>
+                <input type="datetime-local" id="dataConsulta" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border focus:border-blue-500 focus:ring focus:ring-blue-200">
+            </div>
+
+            <button type="submit" class="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-700 transition duration-200">
+                Confirmar Agendamento
+            </button>
+        </form>
+        <div id="mensagemConsulta" class="mt-4 text-sm font-medium"></div>
+    </section>
+
+    <!-- SEÇÃO DE CADASTROS RÁPIDOS -->
+    <div class="space-y-8">
+
+        <!-- Cadastro de Paciente -->
+        <section class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+            <h3 class="text-lg font-semibold mb-3 text-gray-700">👤 Cadastrar Novo Paciente</h3>
+            <form id="formPaciente" class="space-y-3">
+                <input type="text" id="nomePaciente" placeholder="Nome Completo" required class="w-full rounded-md border-gray-300 p-2 border text-sm">
+                <input type="text" id="cpfPaciente" placeholder="CPF" required class="w-full rounded-md border-gray-300 p-2 border text-sm">
+                <input type="email" id="emailPaciente" placeholder="E-mail" required class="w-full rounded-md border-gray-300 p-2 border text-sm">
+                <input type="text" id="telefonePaciente" placeholder="Telefone" required class="w-full rounded-md border-gray-300 p-2 border text-sm">
+                <button type="submit" class="w-full bg-emerald-600 text-white font-semibold py-2 px-3 rounded-md hover:bg-emerald-700 text-sm transition">
+                    Salvar Paciente
+                </button>
+            </form>
+            <div id="mensagemPaciente" class="mt-2 text-xs font-medium"></div>
+        </section>
+
+        <!-- Cadastro de Dentista -->
+        <section class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+            <h3 class="text-lg font-semibold mb-3 text-gray-700">👨‍⚕️ Cadastrar Novo Dentista</h3>
+            <form id="formDentista" class="space-y-3">
+                <input type="text" id="nomeDentista" placeholder="Nome do Dentista" required class="w-full rounded-md border-gray-300 p-2 border text-sm">
+                <input type="text" id="croDentista" placeholder="CRO (Registro profissional)" required class="w-full rounded-md border-gray-300 p-2 border text-sm">
+                <input type="email" id="emailDentista" placeholder="E-mail" required class="w-full rounded-md border-gray-300 p-2 border text-sm">
+                <button type="submit" class="w-full bg-purple-600 text-white font-semibold py-2 px-3 rounded-md hover:bg-purple-700 text-sm transition">
+                    Salvar Dentista
+                </button>
+            </form>
+            <div id="mensagemDentista" class="mt-2 text-xs font-medium"></div>
+        </section>
+
+    </div>
+
+</main>
+
+<!-- Script de Integração com o Backend Spring Boot -->
+<script>
+    const API_URL = ''; // Como está no static, a raiz "/" aponta para o próprio Spring Boot
+
+    // Função para carregar Pacientes e Dentistas nos Selects
+    async function carregarDadosSelects() {
+        try {
+            // Carregar Pacientes
+            const resPacientes = await fetch(`${API_URL}/pacientes`);
+            const pacientes = await resPacientes.json();
+            const selectPaciente = document.getElementById('selectPaciente');
+            selectPaciente.innerHTML = '<option value="">Selecione um paciente</option>';
+            pacientes.forEach(p => {
+                selectPaciente.innerHTML += `<option value="${p.id}">${p.nome} (CPF: ${p.cpf})</option>`;
+            });
+
+            // Carregar Dentistas (ajuste a rota caso seu endpoint mude para /dentistas ou /medicodentista)
+            const resDentistas = await fetch(`${API_URL}/medicodentista`);
+            const dentistas = await resDentistas.json();
+            const selectDentista = document.getElementById('selectDentista');
+            selectDentista.innerHTML = '<option value="">Selecione um dentista</option>';
+            dentistas.forEach(d => {
+                selectDentista.innerHTML += `<option value="${d.id}">${d.nome} - CRO: ${d.cro}</option>`;
+            });
+        } catch (error) {
+            console.error("Erro ao carregar dados iniciais:", error);
+        }
+    }
+
+    // Submeter Agendamento de Consulta
+    document.getElementById('formConsulta').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const msgDiv = document.getElementById('mensagemConsulta');
+
+        const dados = {
+            pacienteId: document.getElementById('selectPaciente').value,
+            medicoDentistaId: document.getElementById('selectDentista').value,
+            localDateTime: document.getElementById('dataConsulta').value
+        };
+
+        try {
+            const response = await fetch(`${API_URL}/consulta`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dados)
+            });
+
+            if (response.ok) {
+                msgDiv.className = "mt-4 text-sm font-medium text-green-600";
+                msgDiv.textContent = "Consulta agendada com sucesso!";
+                document.getElementById('formConsulta').reset();
+            } else {
+                const errText = await response.text();
+                msgDiv.className = "mt-4 text-sm font-medium text-red-600";
+                msgDiv.textContent = "Erro ao agendar: " + errText;
+            }
+        } catch (error) {
+            msgDiv.className = "mt-4 text-sm font-medium text-red-600";
+            msgDiv.textContent = "Erro de conexão com o servidor.";
+        }
+    });
+
+    // Cadastrar Paciente
+    document.getElementById('formPaciente').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const msgDiv = document.getElementById('mensagemPaciente');
+        const dados = {
+            nome: document.getElementById('nomePaciente').value,
+            cpf: document.getElementById('cpfPaciente').value,
+            email: document.getElementById('emailPaciente').value,
+            telefone: document.getElementById('telefonePaciente').value
+        };
+
+        const response = await fetch(`${API_URL}/pacientes`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dados)
+        });
+
+        if (response.ok) {
+            msgDiv.className = "mt-2 text-xs font-medium text-green-600";
+            msgDiv.textContent = "Paciente cadastrado!";
+            document.getElementById('formPaciente').reset();
+            carregarDadosSelects();
+        } else {
+            msgDiv.className = "mt-2 text-xs font-medium text-red-600";
+            msgDiv.textContent = "Erro ao cadastrar paciente.";
+        }
+    });
+
+    // Cadastrar Dentista
+    document.getElementById('formDentista').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const msgDiv = document.getElementById('mensagemDentista');
+        const dados = {
+            nome: document.getElementById('nomeDentista').value,
+            cro: document.getElementById('croDentista').value,
+            email: document.getElementById('emailDentista').value
+        };
+
+        const response = await fetch(`${API_URL}/medicodentista`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dados)
+        });
+
+        if (response.ok) {
+            msgDiv.className = "mt-2 text-xs font-medium text-green-600";
+            msgDiv.textContent = "Dentista cadastrado!";
+            document.getElementById('formDentista').reset();
+            carregarDadosSelects();
+        } else {
+            msgDiv.className = "mt-2 text-xs font-medium text-red-600";
+            msgDiv.textContent = "Erro ao cadastrar dentista.";
+        }
+    });
+
+    // Executar carregamento ao abrir a página
+    carregarDadosSelects();
+</script>
+</body>
+</html>

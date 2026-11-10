@@ -1,0 +1,49 @@
+📋 API REST - Sistema de Gerenciamento de Clínica Odontológica
+
+  API Backend desenvolvida em Java com Spring Boot para o gerenciamento de uma clínica odontológica, cobrindo o cadastro de pacientes, dentistas e o agendamento de consultas com controle de integridade relacional.
+  🚀 Tecnologias Utilizadas
+
+      Java (JDK mais recente)
+
+      Spring Boot (Spring Web, Spring Data JPA, Bean Validation)
+
+      MySQL (Banco de dados relacional)
+
+      Hibernate ORM (Mapeamento objeto-relacional com UUIDs)
+
+      Lombok (Redução de boilerplate code)
+
+      Jackson (Desserialização de payloads JSON)
+
+  🏗️ Arquitetura e Modelagem de Domínio
+
+  O sistema é estruturado em camadas (Controller, Repository, Entity, DTO) e utiliza identificadores universais (UUID) em todas as entidades para garantir maior segurança e escalabilidade.
+  📋 Entidades Principais:
+
+      Paciente: Armazena informações cadastrais dos pacientes (nome, CPF, telefone, e-mail).
+
+      MedicoDentista: Armazena os dados dos profissionais de saúde da clínica.
+
+      Consulta: Gerencia os agendamentos, vinculando um Paciente e um MedicoDentista através de relacionamentos @ManyToOne, além de registrar a data/hora (LocalDateTime) e o status do atendimento.
+
+  ⚙️ Funcionalidades da API (Endpoints)
+
+      Gestão de Pacientes (/pacientes): Cadastro e listagem completa dos pacientes com validação de dados via DTOs.
+
+      Gestão de Dentistas (/medicodentista): Cadastro e listagem dos profissionais.
+
+      Agendamento de Consultas (/consulta):
+
+          Realiza o agendamento recebendo os IDs (UUID) do paciente e do dentista, juntamente com a data e hora.
+
+          Valida a existência prévia dos registros no banco de dados antes de efetivar a transação.
+
+          Retorna o status de confirmação do agendamento.
+
+  🛠️ Evolução e Boas Práticas Implementadas
+
+      Validação de Payload: Uso de @Valid e anotações do Bean Validation para assegurar que requisições incorretas ou campos obrigatórios nulos retornem respostas descritivas (400 Bad Request).
+
+      Refatoração do Domínio: DesACOPLAMENTO de classes abstratas de dados genéricos na entidade de consultas, centralizando a integridade referencial nas chaves estrangeiras relacionais (paciente_id e medico_dentista_id).
+
+      Sincronização com o MySQL: Configuração do Hibernate com ddl-auto: update para gerenciar a evolução do esquema do banco de dados de maneira automatizada e segura.dar se o dentista já possui consulta marcada no mesmo horário).
